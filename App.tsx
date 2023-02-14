@@ -11,6 +11,7 @@ import {
 	View,
 	Image,
 } from "react-native";
+import { getMovies } from "./MovieFetcher";
 
 /**
  * MovieProps type
@@ -67,24 +68,8 @@ const App = () => {
 	const [loading, setLoading] = useState<Boolean>(true);
 	const [ascending, setAscending] = useState<Boolean>(true);
 
-	// fetching movies
-	const getMovies = async () => {
-		const url: string =
-			"https://raw.githubusercontent.com/Package/Star-Wars-Express/master/movies.json";
-
-		try {
-			const response = await fetch(url);
-			const json = await response.json();
-			setData(json.movies);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
-		getMovies();
+		getMovies(setData, setLoading);
 	}, []);
 
 	// sorting logic
