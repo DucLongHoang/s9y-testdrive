@@ -66,7 +66,6 @@ const App = () => {
 	const [data, setData] = useState<MovieProps[]>([]);
 	const [loading, setLoading] = useState<Boolean>(true);
 	const [ascending, setAscending] = useState<Boolean>(true);
-	const [btnText, setBtnText] = useState<string>("Sort des");
 
 	// fetching movies
 	const getMovies = async () => {
@@ -93,11 +92,9 @@ const App = () => {
 		if (ascending) {
 			setData([...data].sort((a, b) => b.episode_number - a.episode_number));
 			setAscending(false);
-			setBtnText("Sort asc");
 		} else {
 			setData([...data].sort((a, b) => a.episode_number - b.episode_number));
 			setAscending(true);
-			setBtnText("Sort des");
 		}
 	};
 
@@ -121,7 +118,9 @@ const App = () => {
 							ItemSeparatorComponent={Separator}
 						/>
 						<TouchableOpacity style={styles.button} onPress={sortMovies}>
-							<Text style={styles.buttonText}>{btnText}</Text>
+							<Text style={styles.buttonText}>
+								{ascending ? "Sort des" : "Sort asc"}
+							</Text>
 						</TouchableOpacity>
 					</>
 				)}
