@@ -21,7 +21,7 @@ const useFetchMovies = (url: string) => {
 		getMovies();
 	}, []);
 
-	return { data, loading };
+	return { data, setData, loading };
 };
 
 export default useFetchMovies;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	TouchableOpacity,
@@ -18,14 +18,16 @@ export const MovieList = () => {
 	const url: string =
 		"https://raw.githubusercontent.com/Package/Star-Wars-Express/master/movies.json";
 
-	var { data, loading } = useFetchMovies(url);
-	const [ascending, setAscending] = useState<Boolean>(true);
+	// takhle metoda vraci filmy a boolean
+	const { data, setData, loading } = useFetchMovies(url);
+	const [ascending, setAscending] = useState<number>(-1);
 
-	// sort anyway and reverse accordingly
+	// sort logic
 	const sortMovies = () => {
-		data = data.sort((a, b) => a.episode_number - b.episode_number);
-		if (ascending) data = data.reverse();
-		setAscending(!ascending);
+		setData(
+			[...data].sort((a, b) => (a.episode_number - b.episode_number) * ascending)
+		);
+		setAscending(-ascending);
 	};
 
 	return loading ? (
@@ -41,7 +43,7 @@ export const MovieList = () => {
 			/>
 			<TouchableOpacity style={styles.button} onPress={sortMovies}>
 				<Text style={styles.buttonText}>
-					{ascending ? "Sort des" : "Sort asc"}
+					{ascending == -1 ? "Sort des" : "Sort asc"}
 				</Text>
 			</TouchableOpacity>
 		</>
