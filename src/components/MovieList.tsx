@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
 	ActivityIndicator,
 	TouchableOpacity,
@@ -19,16 +19,14 @@ export const MovieList = () => {
 		"https://raw.githubusercontent.com/Package/Star-Wars-Express/master/movies.json";
 
 	// takhle metoda vraci filmy a boolean
-	const { data, setData, loading } = useFetchMovies(url);
+	const { data, loading } = useFetchMovies(url);
 	const [ascending, setAscending] = useState<number>(-1);
 
-	// sort logic
-	const sortMovies = () => {
-		setData(
-			[...data].sort((a, b) => (a.episode_number - b.episode_number) * ascending)
+	const sortedMovies = useMemo(() => {
+		return [...data].sort(
+			(a, b) => (b.episode_number - a.episode_number) * ascending
 		);
-		setAscending(-ascending);
-	};
+	}, [ascending, data]);
 
 	return loading ? (
 		<ActivityIndicator />
@@ -36,12 +34,15 @@ export const MovieList = () => {
 		<>
 			<FlatList
 				style={{ width: "100%" }}
-				data={data}
+				data={sortedMovies}
 				keyExtractor={({ episode_number }) => episode_number.toString()}
 				renderItem={({ item }) => <Movie movie={item} />}
 				ItemSeparatorComponent={Separator}
 			/>
-			<TouchableOpacity style={styles.button} onPress={sortMovies}>
+			<TouchableOpacity
+				style={styles.button}
+				onPress={() => setAscending(-ascending)}
+			>
 				<Text style={styles.buttonText}>
 					{ascending == -1 ? "Sort des" : "Sort asc"}
 				</Text>
